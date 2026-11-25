@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123d70"><link rel="manifest" href="manifest.webmanifest">
+<title>Aksingh App</title>
+<style>
+:root{--blue:#123d70;--gold:#d7a93b;--bg:#f3f6fb;--ink:#172337}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#123d70,#2369a5);color:white;padding:22px 18px 26px;border-radius:0 0 24px 24px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:52px;height:52px;border:2px solid var(--gold);border-radius:15px;display:grid;place-items:center;font-weight:900;font-size:21px;color:var(--gold)}
+h1{font-size:22px;margin:0}header p{margin:5px 0 0;color:#dbeafe;font-size:12px;letter-spacing:1px}
+main{max-width:720px;margin:auto;padding:18px}.panel{background:white;border-radius:18px;padding:18px;box-shadow:0 5px 22px #123d7010;margin:14px 0}
+input,textarea,button,select{font:inherit}input,textarea{width:100%;padding:12px;border:1px solid #ccd6e3;border-radius:10px;margin:7px 0}
+button{border:0;border-radius:10px;padding:12px 15px;background:var(--blue);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:#e8eff8;color:var(--blue)}button.danger{background:#a83232}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tile{background:white;border:1px solid #e3eaf3;border-radius:16px;padding:17px;text-align:left;min-height:104px;color:var(--ink)}.tile b{display:block;margin:8px 0 4px}.tile small{color:#66758a}.ico{font-size:25px;color:#2674c8}
+.hidden{display:none!important}.muted{color:#6b7788;font-size:13px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.item{padding:11px 0;border-bottom:1px solid #edf0f5;overflow-wrap:anywhere}.item:last-child{border:0}.item a{color:#175da0}.tag{font-size:11px;background:#e8eff8;color:#174c7e;border-radius:20px;padding:4px 8px}
+footer{text-align:center;color:#7b8797;font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">AK</div><div><h1>AKSINGH APP</h1><p>JAN SUVIDHA KENDRA</p></div></div><p style="margin-top:18px;font-size:16px;letter-spacing:0">आपकी डिजिटल सेवाएँ, एक जगह</p></header>
+<main>
+<section id="login" class="panel">
+<h2>🔐 सुरक्षित लॉगिन</h2><p class="muted">ऐप खोलने के लिए पासवर्ड डालें। पहली बार ऐप चलाने पर अपना निजी पासवर्ड सेट करें।</p>
+<input id="pass" type="password" placeholder="पासवर्ड" autocomplete="current-password">
+<div class="row"><button id="loginBtn">लॉगिन</button><button class="secondary" id="setupBtn">पहली बार पासवर्ड सेट करें</button></div>
+<p id="loginMsg" class="muted"></p>
+</section>
+<section id="app" class="hidden">
+<div class="panel row" style="justify-content:space-between"><div><b>नमस्ते! Aksingh App में आपका स्वागत है</b><div class="muted">PDF • Photo • Form • Link • Book</div></div><button class="secondary" id="logoutBtn">लॉगआउट</button></div>
+<div class="grid">
+<button class="tile" data-tab="PDF"><span class="ico">📄</span><b>PDF</b><small>PDF दस्तावेज़ जोड़ें</small></button>
+<button class="tile" data-tab="Photo"><span class="ico">🖼️</span><b>Photo</b><small>फोटो जोड़ें</small></button>
+<button class="tile" data-tab="Form"><span class="ico">📝</span><b>Form</b><small>फॉर्म लिंक रखें</small></button>
+<button class="tile" data-tab="Link"><span class="ico">🔗</span><b>Link</b><small>वेबसाइट लिंक रखें</small></button>
+<button class="tile" data-tab="Book"><span class="ico">📚</span><b>Book</b><small>किताबें और नोट्स</small></button>
+<button class="tile" data-tab="Admin"><span class="ico">⚙️</span><b>Admin</b><small>पासवर्ड और डेटा</small></button>
+</div>
+<section id="workspace" class="panel hidden">
+<div class="row" style="justify-content:space-between"><h2 id="sectionTitle">सेक्शन</h2><button class="secondary" id="backBtn">वापस</button></div>
+<div id="formArea"></div><div id="listArea"></div>
+</section>
+</section>
+</main>
+<footer>Aksingh App • Starter prototype</footer>
+<script>
+const $=id=>document.getElementById(id);
+const STORE='aksingh_items_v1', PASS='aksingh_local_pass_v1';
+let items=JSON.parse(localStorage.getItem(STORE)||'[]'), current='';
+function save(){localStorage.setItem(STORE,JSON.stringify(items))}
+function showApp(){ $('login').classList.add('hidden');$('app').classList.remove('hidden'); }
+$('setupBtn').onclick=()=>{let p=$('pass').value;if(p.length<8){$('loginMsg').textContent='कम से कम 8 अक्षरों का पासवर्ड रखें।';return}if(localStorage.getItem(PASS)){ $('loginMsg').textContent='पासवर्ड पहले से सेट है। लॉगिन करें।';return}localStorage.setItem(PASS,p);$('loginMsg').textContent='पासवर्ड इस मोबाइल में सेट हो गया। अब लॉगिन करें।';$('pass').value=''};
+$('loginBtn').onclick=()=>{let p=$('pass').value, saved=localStorage.getItem(PASS);if(!saved){$('loginMsg').textContent='पहले पासवर्ड सेट करें।';return}if(p===saved){$('loginMsg').textContent='';$('pass').value='';showApp()}else $('loginMsg').textContent='गलत पासवर्ड।'};
+$('logoutBtn').onclick=()=>{$('app').classList.add('hidden');$('login').classList.remove('hidden')};
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));
+$('backBtn').onclick=()=>{$('workspace').classList.add('hidden')};
+function openTab(tab){current=tab;$('workspace').classList.remove('hidden');$('sectionTitle').textContent=tab;
+let f=$('formArea');f.innerHTML='';$('listArea').innerHTML='';
+if(tab==='Admin'){f.innerHTML='<p class="muted">इस शुरुआती संस्करण में पासवर्ड और सामग्री केवल इसी डिवाइस में सेव होते हैं। सभी मोबाइल में एक जैसा डेटा दिखाने के लिए सुरक्षित ऑनलाइन डेटाबेस जोड़ना होगा।</p><button class="danger" id="clearBtn">इस मोबाइल का सारा डेटा मिटाएँ</button>'; $('clearBtn').onclick=()=>{if(confirm('क्या आप इस मोबाइल का सारा डेटा मिटाना चाहते हैं?')){items=[];save();render()}};return}
+let isFile=['PDF','Photo','Book'].includes(tab);
+f.innerHTML=`<h3>नया ${tab} जोड़ें</h3><input id="itemTitle" placeholder="नाम / शीर्षक">${isFile?'<input id="itemFile" type="file" '+(tab==='Photo'?'accept="image/*"':'')+'>':'<input id="itemUrl" type="url" placeholder="https:// वेबसाइट लिंक">'}<button id="addBtn">जोड़ें</button><p class="muted" id="addMsg">फाइलें इस डिवाइस के ब्राउज़र में सेव होंगी।</p>`;
+$('addBtn').onclick=async()=>{let title=$('itemTitle').value.trim();if(!title){$('addMsg').textContent='पहले नाम लिखें।';return}
+let obj={type:tab,title,created:Date.now()};
+if(isFile){let file=$('itemFile').files[0];if(!file){$('addMsg').textContent='फाइल चुनें।';return}if(file.size>3*1024*1024){$('addMsg').textContent='डेमो में 3 MB तक की फाइल जोड़ें।';return}obj.data=await new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)});obj.filename=file.name}
+else{let url=$('itemUrl').value.trim();if(!/^https?:\\/\\//i.test(url)){$('addMsg').textContent='सही http/https लिंक डालें।';return}obj.url=url}
+items.unshift(obj);save();render();$('addMsg').textContent='जोड़ दिया गया।';$('itemTitle').value=''};
+render()}
+function render(){let list=$('listArea');list.innerHTML='<h3>सेव की गई सामग्री</h3>';let filtered=items.filter(x=>x.type===current);if(!filtered.length){list.innerHTML+='<p class="muted">अभी कोई सामग्री नहीं है।</p>';return}
+filtered.forEach((x)=>{let d=document.createElement('div');d.className='item';let content=`<b>${escapeHtml(x.title)}</b> <span class="tag">${x.type}</span>`;
+if(x.url)content+=`<div><a href="${escapeAttr(x.url)}" target="_blank" rel="noopener">लिंक खोलें</a></div>`;
+if(x.data&&x.type==='Photo')content+=`<div><img src="${x.data}" style="max-width:100%;max-height:140px;margin-top:8px;border-radius:8px"></div>`;
+if(x.data)content+=`<div><a href="${x.data}" download="${escapeAttr(x.filename||x.title)}">फाइल खोलें / डाउनलोड करें</a></div>`;
+content+=`<div style="margin-top:8px"><button class="danger" data-del="${x.created}">हटाएँ</button></div>`;d.innerHTML=content;list.appendChild(d)});
+list.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{items=items.filter(x=>String(x.created)!==b.dataset.del);save();render()})}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function escapeAttr(s){return escapeHtml(s)}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
